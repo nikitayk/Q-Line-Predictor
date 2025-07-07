@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # Allows frontend to access backend (IMPORTANT)
+CORS(app)  # Allows frontend to access backend
 
 @app.route('/')
 def home():
@@ -11,19 +11,16 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Get input data from frontend
         data = request.get_json()
 
-        # Extract values sent from frontend
-        queue_length = data.get('current_queue_length', 0)
-        counters = data.get('number_of_active_counters', 1)
-        service_time = data.get('average_service_time_per_customer', 1.0)
-        is_rush_hour = data.get('is_rush_hour', False)
-        is_weekend = data.get('is_weekend', False)
+        queue_length = int(data.get('current_queue_length', 0))
+        counters = max(int(data.get('number_of_active_counters', 1)), 1)
+        service_time = float(data.get('average_service_time_per_customer', 1.0))
+        is_rush_hour = bool(data.get('is_rush_hour', False))
+        is_weekend = bool(data.get('is_weekend', False))
 
-        # Basic logic (or use ML model here)
+        # Basic prediction formula
         wait_time = (queue_length / counters) * service_time
-
         if is_rush_hour:
             wait_time *= 1.3
         if is_weekend:
