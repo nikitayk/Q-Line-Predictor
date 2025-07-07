@@ -67,6 +67,7 @@ const QLineWaitTimePredictor = () => {
       console.log('Sending API request:', apiData);
 
       const response = await fetch('https://q-line-backend.onrender.com/predict', {
+
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
